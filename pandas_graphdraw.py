@@ -16,8 +16,8 @@ if df['timeStamp'].isnull().any():
 # 인덱스를 'timeStamp'로 설정
 df.set_index('timeStamp', inplace=True)
 
-# 이후에 데이터 분석 및 그래프 그리기 작업을 수행합니다.
-# 예를 들어, 10분 간격으로 데이터를 리샘플링하여 트랜잭션 수를 카운트할 수 있습니다.
+# 데이터 분석 및 그래프 그리기
+# 예를 들어, 10분 간격으로 데이터를 리샘플링하여 트랜잭션 수를 카운트
 transaction_counts = df.resample('10T').size()
 
 # 트랜잭션 수를 막대 그래프로 표시
@@ -30,22 +30,22 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 
-# Gas Price와 Gas Used를 시간에 따라 그래프로 표시
+# GasPrice와 GasUsed를 시간에 따라 그래프로 표시
 fig, ax1 = plt.subplots(figsize=(15, 5))
 
-# Gas Price를 선 그래프로 표시
+# GasPrice를 선 그래프로 표시
 color = 'tab:red'
 ax1.set_xlabel('Time')
 ax1.set_ylabel('Gas Price', color=color)
 ax1.plot(df.index, df['gasPrice'], color=color)
 ax1.tick_params(axis='y', labelcolor=color)
 
-# Gas Used를 막대 그래프로 표시하기 위한 준비
+# GasUsed를 막대 그래프로 표시하기 위한 준비
 ax2 = ax1.twinx()  # 같은 x축을 공유하는 두 번째 y축 생성
 color = 'tab:blue'
 ax2.set_ylabel('Gas Used', color=color)
 
-# Gas Used를 막대 그래프로 표시
+# GasUsed를 막대 그래프로 표시
 width = 0.0005  # 막대의 너비를 설정 (적절한 값으로 조정해야 할 수 있음)
 ax2.bar(df.index, df['gasUsed'], width, color=color, label='Gas Used', align='center')
 ax2.tick_params(axis='y', labelcolor=color)
