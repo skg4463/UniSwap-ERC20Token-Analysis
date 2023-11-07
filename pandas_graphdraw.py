@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.ticker as mticker
+import numpy as np
 
 # CSV 파일 읽기
 df = pd.read_csv('uniswap_transactions.csv')
@@ -17,20 +18,22 @@ if df['timeStamp'].isnull().any():
 
 
 # 데이터 전처리: 'data' 열에서 뒤에서 두 번째 64바이트 데이터를 추출하여 10진수로 변환
-def extract_liquidity(hex_data):
+def extract_liquidity(hex_data, blocknum):
     try:
         # 뒤에서 두 번째 64바이트 데이터 추출
         liquidity_hex = hex_data[-(2*64):-64]
         # 16진수를 10진수로 변환
         liquidity = int(liquidity_hex, 16)
+        print(liquidity, blocknum)
         # 설정한 임계값보다 작은 값은 무시
-        return liquidity if liquidity > 1_000_000_000 else None
+        return np.log(liquidity) if liquidity < 1e20 else np.nan
     except (ValueError, TypeError):
-        return None
+        return np.nan
 
 
 # 'Liquidity' 열 추가
-df['Liquidity'] = df['data'].apply(extract_liquidity)
+# df['Liquidity'] = df['data'].apply(extract_liquidity)
+df['Liquidity'] = df.apply(lambda row: extract_liquidity(row['data'], row['blockNumber']), axis=1)
 
 
 # 인덱스를 'timeStamp'로 설정
@@ -79,14 +82,14 @@ ax3 = ax1.twinx()
 ax3.spines['right'].set_position(('outward', 60))  # y축을 오른쪽으로 이동
 color = 'tab:green'
 ax3.set_ylabel('Liquidity', color=color)
-ax3.plot(df.index, df['Liquidity'], color=color, label='Liquidity')
+ax3.plot(df.index, df['Liquidity'], color=color, linestyle='-', label='Liquidity')
 
 ax3.tick_params(axis='y', labelcolor=color)
 
 # 숫자 줄임 표현 비활성화
-ax1.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
-ax2.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
-ax3.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
+# ax1.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
+# ax2.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
+# ax3.yaxis.set_major_formatter(mticker.ScalarFormatter(useMathText=True))
 # ax3.yaxis.get_major_formatter().set_scientific(False)  # ax3의 숫자 줄임 표현 비활성화
 
 ax1.xaxis.set_major_locator(mdates.HourLocator(interval=1))
