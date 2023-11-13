@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 
 # 데이터 불러오기 및 초기 처리
 file_path = 'export-address-token.csv'
@@ -102,7 +101,8 @@ ax.plot(swap_resampled.index, swap_resampled['TokenValue'], label='Swap Actions'
 # fig, ax = plt.subplots(figsize=(15, 8))
 # colors = ['blue', 'green', 'red']  # 각 유형별 색상 설정
 # for (transaction_type, color) in zip(token_movement_summary.columns, colors):
-#     ax.plot(token_movement_summary.index, token_movement_summary[transaction_type], label=transaction_type, color=color)
+#     ax.plot(token_movement_summary.index, token_movement_summary[transaction_type], \
+#     label=transaction_type, color=color)
 
 ax.set_xlabel('DateTime (2-hour intervals)')
 ax.set_ylabel('Token Value Moved')
