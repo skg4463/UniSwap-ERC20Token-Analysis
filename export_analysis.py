@@ -77,12 +77,12 @@ fig, ax = plt.subplots(figsize=(15, 8))
 
 # 유동성 관련 행위
 liquidity_data = data[data['TransactionType'].isin(liquidity_actions)]
-liquidity_resampled = liquidity_data.resample('2H', on='DateTime (UTC)').sum()
+liquidity_resampled = liquidity_data.resample('H', on='DateTime (UTC)').sum()
 ax.plot(liquidity_resampled.index, liquidity_resampled['TokenValue'], label='Liquidity Actions', color='blue')
 
 # 스왑 행위
 swap_data = data[data['TransactionType'].isin(swap_actions)]
-swap_resampled = swap_data.resample('2H', on='DateTime (UTC)').sum()
+swap_resampled = swap_data.resample('H', on='DateTime (UTC)').sum()
 ax.plot(swap_resampled.index, swap_resampled['TokenValue'], label='Swap Actions', color='green')
 
 # Swap action + Liquidity Action (add, remove)
@@ -104,7 +104,7 @@ ax.plot(swap_resampled.index, swap_resampled['TokenValue'], label='Swap Actions'
 #     ax.plot(token_movement_summary.index, token_movement_summary[transaction_type], \
 #     label=transaction_type, color=color)
 
-ax.set_xlabel('DateTime (2-hour intervals)')
+ax.set_xlabel('DateTime (1-hour intervals)')
 ax.set_ylabel('Token Value Moved')
 ax.legend(loc='upper left')
 plt.title('Token Movement Over Time by Transaction Type')
